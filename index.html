@@ -676,6 +676,43 @@
     </div>
   </footer>
 
+  <!-- Auth Modal -->
+  <div class="auth-modal" id="authModal" aria-hidden="true">
+    <div class="auth-overlay" id="authOverlay"></div>
+    <div class="auth-card glass-card" role="dialog" aria-labelledby="authTitle">
+      <button class="auth-close" id="authClose" aria-label="Close">&times;</button>
+      <h2 id="authTitle">Welcome back</h2>
+      <p class="text-muted" style="margin-bottom:20px;font-size:0.9rem;">Sign in to save analyses and jobs.</p>
+
+      <button type="button" class="btn btn-outline" id="authGoogle" style="width:100%;margin-bottom:16px;">
+        Continue with Google
+      </button>
+
+      <div class="paste-divider"><span>or email</span></div>
+
+      <form id="authForm" data-mode="login">
+        <div class="auth-field" id="authNameField" style="display:none;">
+          <label for="authName">Full name</label>
+          <input id="authName" type="text" autocomplete="name" placeholder="Your name">
+        </div>
+        <div class="auth-field">
+          <label for="authEmail">Email</label>
+          <input id="authEmail" type="email" required autocomplete="email" placeholder="you@email.com">
+        </div>
+        <div class="auth-field">
+          <label for="authPassword">Password</label>
+          <input id="authPassword" type="password" required minlength="6" autocomplete="current-password" placeholder="••••••••">
+        </div>
+        <p id="authError" class="auth-error"></p>
+        <button type="submit" class="btn btn-primary" id="authSubmit" style="width:100%;">Log In</button>
+      </form>
+      <p id="authSwitch" class="auth-switch">New here? <button type="button" class="auth-link" data-mode="signup">Create account</button></p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase-auth.js"></script>
   <script src="js/main.js"></script>
   <script src="js/api.js"></script>
   <script src="js/app.js"></script>

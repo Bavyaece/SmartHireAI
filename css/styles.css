@@ -1991,3 +1991,109 @@ ul, ol {
 .resume-textarea::placeholder {
   color: var(--text-muted);
 }
+
+/* Auth modal */
+.auth-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.auth-modal.open {
+  display: flex;
+}
+
+.auth-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 10, 19, 0.75);
+  backdrop-filter: blur(6px);
+}
+
+.auth-card {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  padding: 32px 28px;
+  z-index: 1;
+}
+
+.auth-card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+}
+
+.auth-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  line-height: 1;
+}
+
+.auth-close:hover {
+  color: var(--text);
+}
+
+.auth-field {
+  margin-bottom: 14px;
+}
+
+.auth-field label {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.auth-field input {
+  width: 100%;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.auth-field input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.auth-error {
+  color: #EF4444;
+  font-size: 0.85rem;
+  min-height: 1.2em;
+  margin: 8px 0 12px;
+}
+
+.auth-switch {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.auth-link {
+  color: var(--primary);
+  font-weight: 600;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}

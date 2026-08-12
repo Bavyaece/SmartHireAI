@@ -253,9 +253,21 @@
     });
 
     grid.querySelectorAll('.save-job-btn').forEach((btn) => {
-      btn.addEventListener('click', function () {
-        const saved = this.classList.toggle('saved');
-        this.textContent = saved ? 'Saved ✓' : 'Save Job';
+      btn.addEventListener('click', async function () {
+        const card = this.closest('.job-card');
+        const jobId = card?.querySelector('[data-job-id]')?.dataset?.jobId;
+        const job = jobs.find((j) => j.id === parseInt(jobId, 10));
+        if (!window.SmartHireAuth?.isConfigured?.() || !window.SmartHireAuth.getUser?.()) {
+          window.SmartHireAuth?.openAuthModal?.('login');
+          return;
+        }
+        try {
+          if (job) await window.SmartHireAuth.saveJob(job);
+          this.classList.add('saved');
+          this.textContent = 'Saved ✓';
+        } catch (e) {
+          alert(e.message || 'Could not save job');
+        }
       });
     });
   }
@@ -313,6 +325,11 @@
       const data = await SmartHireAPI.analyzeResume(file);
       saveProfile(data);
       renderAnalysis(data);
+      if (window.SmartHireAuth?.getUser?.()) {
+        try {
+          await window.SmartHireAuth.saveAnalysis(data);
+        } catch (_) {}
+      }
       showUploadFeedback('Analysis complete for ' + file.name, 'success');
       document.querySelector('#dashboard')?.scrollIntoView({ behavior: 'smooth' });
     } catch (err) {

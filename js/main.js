@@ -59,7 +59,14 @@
   document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
     anchor.addEventListener('click', function (e) {
       const targetId = this.getAttribute('href');
-      if (targetId === '#login' || targetId === '#contact' || targetId === '#privacy' || targetId === '#terms') {
+      if (targetId === '#login' || targetId === '#signup') {
+        e.preventDefault();
+        if (window.SmartHireAuth) {
+          window.SmartHireAuth.openAuthModal(targetId === '#signup' ? 'signup' : 'login');
+        }
+        return;
+      }
+      if (targetId === '#contact' || targetId === '#privacy' || targetId === '#terms') {
         e.preventDefault();
         return;
       }
