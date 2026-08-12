@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import AnalysisRecord
 from app.schemas import ResumeAnalysisResponse, JobResponse
-from app.services.resume_parser import extract_text, normalize_text
+from app.services.resume_parser import extract_text, normalize_text, extraction_quality
 from app.services.skill_extractor import extract_skills
 from app.services.resume_analyzer import score_resume, recommend_roles
 from app.services.job_matcher import match_jobs
@@ -33,8 +33,22 @@ async def analyze_resume(file: UploadFile = File(...), db: Session = Depends(get
         raise HTTPException(status_code=422, detail=f"Could not parse file: {e}") from e
 
     text = normalize_text(raw_text)
-    if len(text) < 50:
-        raise HTTPException(status_code=422, detail="Resume text is too short or could not be extracted")
+    quality = extraction_quality(text)
+
+    # Scanned / image-only PDFs often extract 0–few characters
+    if quality["letters"] < 30 or quality["words"] < 8:
+        name = (file.filename or "").lower()
+        if name.endswith(".pdf"):
+            detail = (
+                "Could not read text from this PDF. It may be a scanned/image resume. "
+                "Please upload a text-based PDF, DOCX, or TXT file (File → Save as PDF from Word/Google Docs)."
+            )
+        else:
+            detail = (
+                "Resume text is too short or could not be extracted. "
+                "Please upload a PDF, DOCX, or TXT with readable text content."
+            )
+        raise HTTPException(status_code=422, detail=detail)
 
     skills = extract_skills(text)
     analysis = score_resume(text, skills)
