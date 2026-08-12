@@ -1,0 +1,32 @@
+{
+  "AI Engineer": {
+    "required": ["python", "machine learning", "sql", "git"],
+    "preferred": ["deep learning", "tensorflow", "pytorch", "docker", "fastapi", "aws", "nlp"],
+    "learning_path": ["Advanced Python", "Machine Learning", "Deep Learning", "FastAPI", "Docker", "Cloud Deployment"]
+  },
+  "Data Analyst": {
+    "required": ["sql", "excel", "python", "data analysis"],
+    "preferred": ["power bi", "tableau", "pandas", "statistics", "etl"],
+    "learning_path": ["SQL Mastery", "Python for Data", "Data Visualization", "Power BI", "Statistics"]
+  },
+  "Software Engineer": {
+    "required": ["javascript", "git", "problem solving"],
+    "preferred": ["react", "node.js", "typescript", "docker", "sql", "aws"],
+    "learning_path": ["JavaScript Fundamentals", "React", "Node.js", "System Design", "Git Advanced"]
+  },
+  "Data Scientist": {
+    "required": ["python", "machine learning", "statistics", "sql"],
+    "preferred": ["deep learning", "nlp", "pandas", "scikit-learn", "tensorflow"],
+    "learning_path": ["Python", "Statistics", "Machine Learning", "Deep Learning", "MLOps"]
+  },
+  "DevOps Engineer": {
+    "required": ["linux", "docker", "git", "ci/cd"],
+    "preferred": ["kubernetes", "aws", "terraform", "jenkins", "python"],
+    "learning_path": ["Linux", "Networking", "Docker", "Kubernetes", "Cloud (AWS)"]
+  },
+  "Full Stack Developer": {
+    "required": ["javascript", "html", "css", "sql", "git"],
+    "preferred": ["react", "node.js", "mongodb", "express", "typescript"],
+    "learning_path": ["HTML/CSS", "JavaScript", "React", "Node.js", "Databases"]
+  }
+}

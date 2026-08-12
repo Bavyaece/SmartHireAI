@@ -1,0 +1,68 @@
+from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
+from sqlalchemy.orm import Session
+from app.database import get_db
+from app.models import AnalysisRecord
+from app.schemas import ResumeAnalysisResponse, JobResponse
+from app.services.resume_parser import extract_text, normalize_text
+from app.services.skill_extractor import extract_skills
+from app.services.resume_analyzer import score_resume, recommend_roles
+from app.services.job_matcher import match_jobs
+from app.services.skill_gap_service import analyze_skill_gap
+from app.config import get_settings
+
+router = APIRouter(prefix="/api", tags=["resume"])
+
+
+@router.post("/analyze-resume", response_model=ResumeAnalysisResponse)
+async def analyze_resume(file: UploadFile = File(...), db: Session = Depends(get_db)):
+    settings = get_settings()
+
+    if not file.filename:
+        raise HTTPException(status_code=400, detail="No file provided")
+
+    content = await file.read()
+    max_bytes = settings.max_upload_mb * 1024 * 1024
+    if len(content) > max_bytes:
+        raise HTTPException(status_code=400, detail=f"File exceeds {settings.max_upload_mb}MB limit")
+
+    try:
+        raw_text = extract_text(file.filename, content)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+    except Exception as e:
+        raise HTTPException(status_code=422, detail=f"Could not parse file: {e}") from e
+
+    text = normalize_text(raw_text)
+    if len(text) < 50:
+        raise HTTPException(status_code=422, detail="Resume text is too short or could not be extracted")
+
+    skills = extract_skills(text)
+    analysis = score_resume(text, skills)
+    roles = recommend_roles(skills)
+    jobs = match_jobs(db, skills)[:12]
+    top_role = roles[0]["role"] if roles else "AI Engineer"
+    skill_gaps = analyze_skill_gap(top_role, skills)
+
+    record = AnalysisRecord(
+        filename=file.filename,
+        score=analysis["score"],
+        skills=skills,
+        strengths=analysis["strengths"],
+        recommended_roles=roles,
+        ats_score=analysis["ats_score"],
+    )
+    db.add(record)
+    db.commit()
+
+    return ResumeAnalysisResponse(
+        score=analysis["score"],
+        skills=skills,
+        strengths=analysis["strengths"],
+        recommended_roles=roles,
+        ats_score=analysis["ats_score"],
+        ats_label=analysis["ats_label"],
+        ats_suggestions=analysis["ats_suggestions"],
+        job_matches=[JobResponse(**j) for j in jobs],
+        skill_gaps=skill_gaps,
+        filename=file.filename,
+    )

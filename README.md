@@ -2,63 +2,115 @@
 
 **Your Career, Smarter with AI.**
 
-SmartHire AI is an AI-powered career assistant that helps students, graduates, job seekers, and professionals analyze their resumes, discover suitable job opportunities, identify skill gaps, and receive personalized career guidance.
+Full-stack AI career platform with a working Python/FastAPI backend — not a demo. Upload a real resume, get real analysis, job matches, skill gaps, and AI career guidance.
 
-🌐 **Live Site:** [https://bavyaece.github.io/SmartHireAI/](https://bavyaece.github.io/SmartHireAI/)
+## Live Demo
 
-## Features
+| Deployment | URL |
+|------------|-----|
+| GitHub Pages (UI only) | [bavyaece.github.io/SmartHireAI](https://bavyaece.github.io/SmartHireAI/) |
+| **Full App (Backend + UI)** | Run locally or deploy to [Render](https://render.com) |
 
-- **Resume Intelligence** — Scoring, skill extraction, ATS suggestions, strength analysis
-- **Smart Job Matching** — Match percentage, skill comparison, recommended roles
-- **Skill Gap Analysis** — Current vs required skills with learning paths
-- **AI Career Mentor** — Personalized career guidance and interview prep
+> **Note:** GitHub Pages hosts the frontend only. For the **full working app** (resume upload, job matching, AI mentor), run the backend locally or deploy to Render.
 
-## Tech Stack
+## Features (Fully Working)
 
-- HTML5, CSS3, Vanilla JavaScript
-- Glassmorphism dark AI aesthetic
-- Fully responsive (desktop, tablet, mobile)
-- GitHub Pages deployment
+| Feature | Backend Endpoint | Description |
+|---------|------------------|-------------|
+| Resume Analyzer | `POST /api/analyze-resume` | Parses PDF/DOCX, extracts skills, scores resume, ATS tips |
+| Job Matching | `GET /api/jobs` | 24 seeded jobs with real match % based on your skills |
+| Skill Gap | `POST /api/skill-gap` | Role readiness, missing skills, learning path |
+| AI Mentor | `POST /api/mentor` | Career chat (OpenAI optional, smart fallback built-in) |
+| Dashboard | Auto-updates | Live stats after resume upload |
+
+## Quick Start (Local — Full App)
+
+### Option 1: One-click (Windows)
+
+```bash
+start.bat
+```
+
+### Option 2: Manual
+
+```bash
+cd backend
+pip install -r requirements.txt
+python run.py
+```
+
+Open **http://localhost:8000** — frontend and API run together.
+
+### Option 3: Docker
+
+```bash
+docker compose up --build
+```
+
+## Deploy to Render (Free)
+
+1. Push this repo to GitHub
+2. Go to [render.com](https://render.com) → New → Blueprint
+3. Connect `Bavyaece/SmartHireAI` — uses `render.yaml` automatically
+4. Your full app will be live at `https://smarthire-ai.onrender.com`
+
+Optional: Add `OPENAI_API_KEY` in Render environment variables for enhanced AI Mentor.
 
 ## Project Structure
 
 ```
-├── index.html          # Main landing page
-├── css/styles.css      # Premium dark theme styles
-├── js/main.js          # Interactions & API stubs
-└── assets/logo.svg     # Brand logo
+SmartHireAI/
+├── index.html              # Frontend landing page
+├── css/ js/ assets/        # Frontend assets
+├── backend/
+│   ├── app/
+│   │   ├── main.py         # FastAPI app + static serving
+│   │   ├── routers/        # API routes
+│   │   ├── services/       # Resume parser, job matcher, AI mentor
+│   │   └── data/           # Skills taxonomy, role requirements
+│   ├── requirements.txt
+│   └── run.py
+├── Dockerfile
+├── docker-compose.yml
+└── render.yaml
 ```
 
-## Local Development
+## API Reference
 
 ```bash
-npx serve .
+# Health check
+GET /api/health
+
+# Analyze resume (multipart file upload)
+POST /api/analyze-resume
+
+# Get jobs with filters
+GET /api/jobs?role=AI Engineer&user_skills=Python,SQL
+
+# Skill gap analysis
+POST /api/skill-gap
+{"target_role": "AI Engineer", "skills": ["Python", "SQL"]}
+
+# AI Mentor chat
+POST /api/mentor
+{"message": "What skills should I learn?", "skills": ["Python"], "target_role": "AI Engineer"}
 ```
 
-Then open `http://localhost:3000`
+## Optional: OpenAI Integration
 
-## API Integration (Future)
+Copy `backend/.env.example` to `backend/.env` and add:
 
-The `SmartHireAPI` object in `js/main.js` provides stub methods for backend integration:
+```
+OPENAI_API_KEY=sk-your-key-here
+```
 
-- `analyzeResume(file)` — Resume upload & AI analysis
-- `getJobs(filters)` — Job matching
-- `getSkillGap(targetRole)` — Skill gap analysis
-- `askMentor(message)` — AI career mentor chat
+Without a key, the AI Mentor uses intelligent rule-based responses powered by your resume profile.
 
-Connect these to your backend or Wix Velo serverless functions. **Never expose API keys on the frontend.**
+## Tech Stack
 
-## Brand Colors
-
-| Token | Hex |
-|-------|-----|
-| Background | `#070A13`, `#0B1020` |
-| Primary | `#8B5CF6` |
-| Secondary | `#6366F1` |
-| Accent | `#3B82F6` |
-| Text | `#FFFFFF` |
-| Muted | `#A1A1AA` |
-
-## License
+- **Frontend:** HTML5, CSS3, Vanilla JavaScript
+- **Backend:** Python 3.12, FastAPI, SQLAlchemy, SQLite
+- **Resume Parsing:** pypdf, python-docx
+- **Deployment:** Docker, Render, GitHub Pages (UI)
 
 © 2026 SmartHire AI. All rights reserved.

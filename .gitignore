@@ -4,3 +4,11 @@ Thumbs.db
 node_modules/
 .env
 .env.*
+backend/.env
+backend/__pycache__/
+backend/**/__pycache__/
+backend/*.db
+backend/smarthire.db
+*.pyc
+.venv/
+venv/

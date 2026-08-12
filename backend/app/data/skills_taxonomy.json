@@ -1,0 +1,8 @@
+{
+  "programming": ["python", "java", "javascript", "typescript", "c++", "c#", "go", "rust", "ruby", "php", "swift", "kotlin", "scala", "r"],
+  "web": ["react", "angular", "vue", "next.js", "node.js", "express", "django", "flask", "fastapi", "spring", "html", "css", "tailwind", "bootstrap"],
+  "data": ["sql", "mysql", "postgresql", "mongodb", "redis", "pandas", "numpy", "tableau", "power bi", "excel", "etl", "data analysis", "data visualization"],
+  "ai_ml": ["machine learning", "deep learning", "tensorflow", "pytorch", "scikit-learn", "nlp", "computer vision", "llm", "openai", "neural networks", "ai"],
+  "devops": ["docker", "kubernetes", "aws", "azure", "gcp", "ci/cd", "jenkins", "terraform", "linux", "git", "github actions"],
+  "soft": ["communication", "leadership", "teamwork", "problem solving", "project management", "agile", "scrum", "critical thinking", "time management"]
+}
