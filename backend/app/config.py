@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     cors_origins: str = "*"
     max_upload_mb: int = 10
     frontend_dir: str = ".."
+    vercel: bool = False
 
     class Config:
         env_file = ".env"
@@ -19,4 +20,12 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
-    return Settings()
+    import os
+
+    settings = Settings()
+    if os.environ.get("VERCEL") or os.environ.get("VERCEL_ENV"):
+        # Writable path on Vercel serverless
+        if settings.database_url.startswith("sqlite:///./"):
+            object.__setattr__(settings, "database_url", "sqlite:////tmp/smarthire.db")
+        object.__setattr__(settings, "vercel", True)
+    return settings

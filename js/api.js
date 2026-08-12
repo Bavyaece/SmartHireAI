@@ -4,11 +4,12 @@
 (function (global) {
   'use strict';
 
-  // Local → localhost:8000 | GitHub Pages → Render API | Render host → same origin
+  // Local → :8000 | GitHub Pages → Render | Vercel / other → same origin
   const API_BASE = global.SMART_HIRE_API_URL || (function () {
     const host = window.location.hostname;
     if (host === 'localhost' || host === '127.0.0.1') return 'http://localhost:8000';
     if (host.includes('github.io')) return 'https://smarthire-ai.onrender.com';
+    // Vercel deployment uses same-origin /api serverless functions
     return window.location.origin;
   })();
 
