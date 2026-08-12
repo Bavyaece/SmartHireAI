@@ -18,8 +18,16 @@
 
   function escapeHtml(text) {
     const div = document.createElement('div');
-    div.textContent = text;
+    div.textContent = text == null ? '' : String(text);
     return div.innerHTML;
+  }
+
+  function setText(el, value) {
+    if (el) el.textContent = value;
+  }
+
+  function setHtml(el, html) {
+    if (el) el.innerHTML = html;
   }
 
   function setLoading(el, loading, text) {
@@ -59,36 +67,47 @@
 
   loadProfile();
 
-  // ---- Resume Analysis UI ----
   function renderAnalysis(data) {
     const preview = document.querySelector('.analysis-preview');
-    if (!preview) return;
+    if (!preview || !data) return;
 
-    preview.querySelector('.analysis-badge').textContent = 'Live';
-    preview.querySelector('.mini-score-value').textContent = Math.round(data.score);
-    preview.querySelector('.analysis-score > span:last-child').textContent = 'Resume Score';
+    setText(preview.querySelector('.analysis-badge'), 'Live');
+    setText(preview.querySelector('.mini-score-value'), String(Math.round(data.score || 0)));
 
-    const skillsEl = preview.querySelector('.analysis-block:nth-of-type(1) .skill-tags');
-    skillsEl.innerHTML = data.skills.length
-      ? data.skills.map(s => `<span class="skill-tag">${escapeHtml(s)}</span>`).join('')
-      : '<span class="text-muted">No skills detected — add technical keywords</span>';
+    const blocks = preview.querySelectorAll('.analysis-block');
+    const skillsEl = blocks[0] ? blocks[0].querySelector('.skill-tags') : null;
+    const skills = data.skills || [];
+    setHtml(
+      skillsEl,
+      skills.length
+        ? skills.map((s) => `<span class="skill-tag">${escapeHtml(s)}</span>`).join('')
+        : '<span class="text-muted">No skills detected</span>'
+    );
 
     const strengthsEl = preview.querySelector('.strength-tags');
-    strengthsEl.innerHTML = data.strengths.map(s =>
-      `<span class="strength-tag">${escapeHtml(s)}</span>`
-    ).join('');
+    setHtml(
+      strengthsEl,
+      (data.strengths || []).map((s) => `<span class="strength-tag">${escapeHtml(s)}</span>`).join('')
+    );
 
     const rolesEl = preview.querySelector('.role-list');
-    rolesEl.innerHTML = data.recommended_roles.map(r =>
-      `<li><span class="role-dot"></span>${escapeHtml(r.role)} (${r.match_percent}%)</li>`
-    ).join('');
+    setHtml(
+      rolesEl,
+      (data.recommended_roles || [])
+        .map((r) => `<li><span class="role-dot"></span>${escapeHtml(r.role)} (${r.match_percent}%)</li>`)
+        .join('')
+    );
 
     const atsFill = preview.querySelector('.ats-fill');
     const atsLabel = preview.querySelector('.ats-label');
-    atsFill.style.width = data.ats_score + '%';
-    atsFill.className = 'ats-fill ' + (data.ats_score >= 65 ? 'good' : 'fair');
-    atsLabel.textContent = data.ats_label;
-    atsLabel.className = 'ats-label ' + (data.ats_score >= 65 ? 'good' : 'fair');
+    if (atsFill) {
+      atsFill.style.width = (data.ats_score || 0) + '%';
+      atsFill.className = 'ats-fill ' + ((data.ats_score || 0) >= 65 ? 'good' : 'fair');
+    }
+    if (atsLabel) {
+      atsLabel.textContent = data.ats_label || '';
+      atsLabel.className = 'ats-label ' + ((data.ats_score || 0) >= 65 ? 'good' : 'fair');
+    }
 
     renderDashboard(data);
     renderJobs(data.job_matches || []);
@@ -99,65 +118,90 @@
   function updateHeroPreview(data) {
     const hero = document.querySelector('.dashboard-preview');
     if (!hero || !data) return;
-    hero.querySelector('.score-value').textContent = Math.round(data.score);
+
+    setText(hero.querySelector('.score-value'), String(Math.round(data.score || 0)));
     const scoreFill = hero.querySelector('.score-fill');
-    if (scoreFill) scoreFill.style.setProperty('--score', Math.round(data.score));
+    if (scoreFill) scoreFill.style.setProperty('--score', Math.round(data.score || 0));
 
-    const tags = hero.querySelector('.skill-tags');
-    tags.innerHTML = data.skills.slice(0, 5).map(s =>
-      `<span class="skill-tag">${escapeHtml(s)}</span>`
-    ).join('');
+    setHtml(
+      hero.querySelector('.skill-tags'),
+      (data.skills || [])
+        .slice(0, 5)
+        .map((s) => `<span class="skill-tag">${escapeHtml(s)}</span>`)
+        .join('')
+    );
 
-    const roles = hero.querySelector('.role-list');
-    roles.innerHTML = data.recommended_roles.slice(0, 3).map(r =>
-      `<li><span class="role-dot"></span>${escapeHtml(r.role)}</li>`
-    ).join('');
+    setHtml(
+      hero.querySelector('.role-list'),
+      (data.recommended_roles || [])
+        .slice(0, 3)
+        .map((r) => `<li><span class="role-dot"></span>${escapeHtml(r.role)}</li>`)
+        .join('')
+    );
 
-    const topMatch = data.recommended_roles[0]?.match_percent || data.job_matches?.[0]?.match_percent || 0;
-    hero.querySelector('.match-fill').style.width = topMatch + '%';
-    hero.querySelector('.match-value').textContent = Math.round(topMatch) + '%';
+    const topMatch =
+      (data.recommended_roles && data.recommended_roles[0] && data.recommended_roles[0].match_percent) ||
+      (data.job_matches && data.job_matches[0] && data.job_matches[0].match_percent) ||
+      0;
+    const matchFill = hero.querySelector('.match-fill');
+    if (matchFill) matchFill.style.width = topMatch + '%';
+    setText(hero.querySelector('.match-value'), Math.round(topMatch) + '%');
   }
 
   function renderDashboard(data) {
     const dash = document.querySelector('.career-dashboard');
-    if (!dash) return;
+    if (!dash || !data) return;
 
     const stats = dash.querySelectorAll('.stat-value');
-    if (stats[0]) stats[0].textContent = Math.round(data.score) + '%';
-    if (stats[1]) stats[1].textContent = data.skills.length;
-    if (stats[2]) stats[2].textContent = (data.job_matches || []).length;
-    if (stats[3]) stats[3].textContent = (data.skill_gaps?.skills || []).filter(s => s.status === 'missing').length;
+    if (stats[0]) stats[0].textContent = Math.round(data.score || 0) + '%';
+    if (stats[1]) stats[1].textContent = String((data.skills || []).length);
+    if (stats[2]) stats[2].textContent = String((data.job_matches || []).length);
+    if (stats[3]) {
+      stats[3].textContent = String(
+        ((data.skill_gaps && data.skill_gaps.skills) || []).filter((s) => s.status === 'missing').length
+      );
+    }
 
-    dash.querySelector('.stat-bar .stat-fill').style.width = data.score + '%';
+    const fill = dash.querySelector('.stat-bar .stat-fill');
+    if (fill) fill.style.width = (data.score || 0) + '%';
 
-    const roleCards = dash.querySelector('.role-cards');
-    roleCards.innerHTML = data.recommended_roles.slice(0, 3).map(r =>
-      `<div class="role-card"><span class="role-name">${escapeHtml(r.role)}</span>
-       <div class="role-match"><div class="role-match-fill" style="width:${r.match_percent}%"></div></div></div>`
-    ).join('');
+    setHtml(
+      dash.querySelector('.role-cards'),
+      (data.recommended_roles || [])
+        .slice(0, 3)
+        .map(
+          (r) =>
+            `<div class="role-card"><span class="role-name">${escapeHtml(r.role)}</span>
+             <div class="role-match"><div class="role-match-fill" style="width:${r.match_percent}%"></div></div></div>`
+        )
+        .join('')
+    );
 
-    const activity = dash.querySelector('.activity-list');
-    const now = new Date();
-    activity.innerHTML = `
-      <li><span class="activity-dot"></span>Resume analyzed <time>just now</time></li>
-      <li><span class="activity-dot"></span>${data.skills.length} skills identified <time>just now</time></li>
-      <li><span class="activity-dot"></span>${(data.job_matches || []).length} jobs matched <time>just now</time></li>
-    `;
+    setHtml(
+      dash.querySelector('.activity-list'),
+      `<li><span class="activity-dot"></span>Resume analyzed <time>just now</time></li>
+       <li><span class="activity-dot"></span>${(data.skills || []).length} skills identified <time>just now</time></li>
+       <li><span class="activity-dot"></span>${(data.job_matches || []).length} jobs matched <time>just now</time></li>`
+    );
 
-    const chartBars = dash.querySelectorAll('.chart-bar-item');
-    const categories = categorizeSkills(data.skills);
+    const categories = categorizeSkills(data.skills || []);
     const values = [categories.technical, categories.soft, categories.tools, categories.domain];
-    chartBars.forEach((item, i) => {
-      item.querySelector('.chart-bar div').style.width = values[i] + '%';
+    dash.querySelectorAll('.chart-bar-item').forEach((item, i) => {
+      const bar = item.querySelector('.chart-bar div');
+      if (bar) bar.style.width = values[i] + '%';
     });
   }
 
   function categorizeSkills(skills) {
-    const lower = skills.map(s => s.toLowerCase());
+    const lower = skills.map((s) => s.toLowerCase());
     const tech = ['python', 'java', 'javascript', 'react', 'sql', 'machine learning', 'deep learning'];
     const soft = ['communication', 'leadership', 'teamwork', 'problem solving'];
     const tools = ['git', 'docker', 'aws', 'tableau', 'power bi', 'excel'];
-    const count = (list) => Math.min(95, Math.round((lower.filter(s => list.some(t => s.includes(t))).length / Math.max(list.length, 1)) * 100 + 20));
+    const count = (list) =>
+      Math.min(
+        95,
+        Math.round((lower.filter((s) => list.some((t) => s.includes(t))).length / Math.max(list.length, 1)) * 100 + 20)
+      );
     return {
       technical: count(tech) || 30,
       soft: count(soft) || 25,
@@ -169,35 +213,46 @@
   function renderJobs(jobs) {
     const grid = document.querySelector('.jobs-grid');
     if (!grid) return;
+    jobs = jobs || [];
 
     if (!jobs.length) {
-      grid.innerHTML = '<p class="text-muted" style="grid-column:1/-1;text-align:center;padding:32px;">No jobs found. Upload your resume to get personalized matches.</p>';
+      setHtml(
+        grid,
+        '<p class="text-muted" style="grid-column:1/-1;text-align:center;padding:32px;">No jobs found yet. Upload your resume PDF to get matches.</p>'
+      );
       return;
     }
 
-    grid.innerHTML = jobs.slice(0, 9).map(job => `
+    setHtml(
+      grid,
+      jobs
+        .slice(0, 9)
+        .map(
+          (job) => `
       <article class="job-card glass-card fade-in visible">
         <div class="job-header">
           <h3>${escapeHtml(job.title)}</h3>
           <span class="match-badge ${job.match_percent >= 90 ? 'high' : ''}">${job.match_percent}% Match</span>
         </div>
         <p class="job-company text-muted">${escapeHtml(job.company)} · ${escapeHtml(job.location)}</p>
-        <div class="skill-tags">${job.skills.map(s => `<span class="skill-tag">${escapeHtml(s)}</span>`).join('')}</div>
+        <div class="skill-tags">${(job.skills || []).map((s) => `<span class="skill-tag">${escapeHtml(s)}</span>`).join('')}</div>
         <div class="job-actions">
           <button class="btn btn-primary btn-sm" data-job-id="${job.id}">View Job</button>
           <button class="btn btn-outline btn-sm save-job-btn">Save Job</button>
         </div>
-      </article>
-    `).join('');
+      </article>`
+        )
+        .join('')
+    );
 
-    grid.querySelectorAll('[data-job-id]').forEach(btn => {
+    grid.querySelectorAll('[data-job-id]').forEach((btn) => {
       btn.addEventListener('click', () => {
-        const job = jobs.find(j => j.id === parseInt(btn.dataset.jobId, 10));
+        const job = jobs.find((j) => j.id === parseInt(btn.dataset.jobId, 10));
         if (job) alert(`${job.title} at ${job.company}\n\n${job.description || 'Great opportunity matching your profile!'}`);
       });
     });
 
-    grid.querySelectorAll('.save-job-btn').forEach(btn => {
+    grid.querySelectorAll('.save-job-btn').forEach((btn) => {
       btn.addEventListener('click', function () {
         const saved = this.classList.toggle('saved');
         this.textContent = saved ? 'Saved ✓' : 'Save Job';
@@ -210,29 +265,41 @@
     if (!section || !gap) return;
 
     const title = section.querySelector('#targetRoleTitle') || section.querySelector('.target-role h3');
-    if (title) title.textContent = gap.target_role;
+    setText(title, gap.target_role);
     const select = document.getElementById('targetRoleSelect');
-    if (select) select.value = gap.target_role;
+    if (select && gap.target_role) {
+      try {
+        select.value = gap.target_role;
+      } catch (_) {}
+    }
 
-    const checklist = section.querySelector('.skill-checklist');
-    checklist.innerHTML = gap.skills.map(s => {
-      const cls = s.status === 'have' ? 'skill-have' : s.status === 'partial' ? 'skill-partial' : 'skill-missing';
-      const icon = s.status === 'have' ? '✓' : s.status === 'partial' ? '⚠' : '✕';
-      return `<li class="${cls}"><span class="check">${icon}</span> ${escapeHtml(s.name)}</li>`;
-    }).join('');
+    setHtml(
+      section.querySelector('.skill-checklist'),
+      (gap.skills || [])
+        .map((s) => {
+          const cls = s.status === 'have' ? 'skill-have' : s.status === 'partial' ? 'skill-partial' : 'skill-missing';
+          const icon = s.status === 'have' ? '✓' : s.status === 'partial' ? '⚠' : '✕';
+          return `<li class="${cls}"><span class="check">${icon}</span> ${escapeHtml(s.name)}</li>`;
+        })
+        .join('')
+    );
 
-    section.querySelector('.gap-fill').style.width = gap.readiness_percent + '%';
-    section.querySelector('.gap-percent').textContent = gap.readiness_percent + '%';
+    const gapFill = section.querySelector('.gap-fill');
+    if (gapFill) gapFill.style.width = (gap.readiness_percent || 0) + '%';
+    setText(section.querySelector('.gap-percent'), (gap.readiness_percent || 0) + '%');
 
-    const steps = section.querySelector('.learning-steps');
-    steps.innerHTML = gap.learning_path.map(item => {
-      const cls = item.status;
-      return `<li class="${cls}">
+    setHtml(
+      section.querySelector('.learning-steps'),
+      (gap.learning_path || [])
+        .map(
+          (item) => `<li class="${item.status || ''}">
         <span class="step-indicator">${item.step}</span>
         <div><strong>${escapeHtml(item.title)}</strong>
-        <div class="step-bar"><div style="width:${item.progress}%"></div></div></div>
-      </li>`;
-    }).join('');
+        <div class="step-bar"><div style="width:${item.progress || 0}%"></div></div></div>
+      </li>`
+        )
+        .join('')
+    );
   }
 
   async function analyzeResumeFile(file, analyzeBtn) {
@@ -249,6 +316,7 @@
       showUploadFeedback('Analysis complete for ' + file.name, 'success');
       document.querySelector('#dashboard')?.scrollIntoView({ behavior: 'smooth' });
     } catch (err) {
+      console.error(err);
       showUploadFeedback(err.message || 'Analysis failed', 'error');
     } finally {
       setLoading(analyzeBtn, false);
@@ -270,7 +338,6 @@
     feedback.style.color = type === 'error' ? '#EF4444' : '#22C55E';
   }
 
-  // ---- Init handlers ----
   const uploadZone = document.getElementById('uploadZone');
   const resumeInput = document.getElementById('resumeInput');
   const analyzeBtn = document.getElementById('analyzeBtn');
@@ -290,7 +357,10 @@
       }
     });
 
-    uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('dragover');
+    });
     uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
     uploadZone.addEventListener('drop', (e) => {
       e.preventDefault();
@@ -303,7 +373,6 @@
     });
   }
 
-  // Job filters
   async function refreshJobs() {
     const filters = {
       role: document.getElementById('filterRole')?.value || '',
@@ -318,11 +387,10 @@
     } catch (_) {}
   }
 
-  document.querySelectorAll('.job-filters select').forEach(sel => {
+  document.querySelectorAll('.job-filters select').forEach((sel) => {
     sel.addEventListener('change', refreshJobs);
   });
 
-  // Skill gap role selector
   async function refreshSkillGap(role) {
     try {
       const gap = await SmartHireAPI.getSkillGap(role, state.profile.skills);
@@ -331,7 +399,6 @@
     } catch (_) {}
   }
 
-  // AI Mentor
   const chatInput = document.querySelector('.chat-input-area input');
   const chatSendBtn = document.querySelector('.chat-input-area .btn');
   const messagesContainer = document.querySelector('.chat-messages');
@@ -360,26 +427,23 @@
   }
 
   chatSendBtn?.addEventListener('click', sendChatMessage);
-  chatInput?.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendChatMessage(); });
+  chatInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') sendChatMessage();
+  });
 
-  // Load jobs and skill gap on startup
   refreshJobs();
   refreshSkillGap(state.profile.targetRole || 'AI Engineer');
 
-  // API status indicator
-  SmartHireAPI.health().then(h => {
-    const badge = document.querySelector('.analysis-badge');
-    if (badge && h.status === 'ok') {
-      console.log('SmartHire AI backend connected', h.ai_enabled ? '(AI enabled)' : '(rule-based mode)');
-    }
-  }).catch(() => {
-    const tip = (window.location.hostname.includes('github.io'))
-      ? 'Connecting to cloud API… wait ~30s (Render free tier wakes up slowly), then refresh.'
-      : 'Backend offline — run start.bat, then open http://localhost:8000';
-    showUploadFeedback(tip, 'error');
-  });
+  SmartHireAPI.health()
+    .then((h) => {
+      if (h.status === 'ok') {
+        console.log('SmartHire AI backend connected', h.ai_enabled ? '(AI enabled)' : '(OCR + rule-based)');
+      }
+    })
+    .catch(() => {
+      showUploadFeedback('Backend offline — run start.bat, then open http://localhost:8000', 'error');
+    });
 
-  // Expose for debugging
   window.SmartHireState = state;
   window.refreshSkillGap = refreshSkillGap;
 })();
