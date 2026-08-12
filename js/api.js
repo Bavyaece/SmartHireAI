@@ -4,10 +4,13 @@
 (function (global) {
   'use strict';
 
-  const API_BASE = global.SMART_HIRE_API_URL ||
-    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-      ? 'http://localhost:8000'
-      : window.location.origin);
+  // Local → localhost:8000 | GitHub Pages → Render API | Render host → same origin
+  const API_BASE = global.SMART_HIRE_API_URL || (function () {
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') return 'http://localhost:8000';
+    if (host.includes('github.io')) return 'https://smarthire-ai.onrender.com';
+    return window.location.origin;
+  })();
 
   async function request(path, options = {}) {
     const url = API_BASE + path;

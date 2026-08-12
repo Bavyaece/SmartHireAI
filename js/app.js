@@ -368,7 +368,10 @@
       console.log('SmartHire AI backend connected', h.ai_enabled ? '(AI enabled)' : '(rule-based mode)');
     }
   }).catch(() => {
-    showUploadFeedback('Backend offline — start server: cd backend && python run.py', 'error');
+    const tip = (window.location.hostname.includes('github.io'))
+      ? 'Connecting to cloud API… wait ~30s (Render free tier wakes up slowly), then refresh.'
+      : 'Backend offline — run start.bat, then open http://localhost:8000';
+    showUploadFeedback(tip, 'error');
   });
 
   // Expose for debugging
