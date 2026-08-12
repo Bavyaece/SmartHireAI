@@ -15,6 +15,12 @@ from app.routers import resume, jobs, skill_gap, mentor
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
     seed_jobs()
+    # Warm OCR model so first PDF upload is faster
+    try:
+        from app.services.resume_parser import _get_ocr_engine
+        _get_ocr_engine()
+    except Exception:
+        pass
     yield
 
 

@@ -86,20 +86,14 @@ async def analyze_resume(file: UploadFile = File(...), db: Session = Depends(get
     text = normalize_text(raw_text)
     quality = extraction_quality(text)
 
-    if quality["letters"] < 30 or quality["words"] < 8:
-        name = (file.filename or "").lower()
-        if name.endswith(".pdf"):
-            detail = (
-                "Could not read text from this PDF even with OCR. "
-                "Please paste your resume in the text box below (Ctrl+A in Word → Copy → Paste), "
-                "or upload a DOCX/TXT file."
-            )
-        else:
-            detail = (
-                "Resume text is too short or could not be extracted. "
-                "Paste your resume text below, or upload DOCX/TXT."
-            )
-        raise HTTPException(status_code=422, detail=detail)
+    if quality["letters"] < 25 or quality["words"] < 6:
+        raise HTTPException(
+            status_code=422,
+            detail=(
+                "Could not read enough text from this PDF. "
+                "Try a clearer scan (higher quality PDF) or export again from Word as PDF."
+            ),
+        )
 
     return _analyze_text_content(raw_text, file.filename, db)
 

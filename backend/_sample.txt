@@ -1,5 +1,0 @@
-Jane Smith
-Email: jane@email.com
-Skills: Python, SQL, Machine Learning, TensorFlow, Docker, FastAPI, React
-Experience: Built AI systems and data pipelines. Led a team of 4 engineers.
-Education: MS Computer Science

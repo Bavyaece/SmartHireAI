@@ -14,16 +14,28 @@
 
   async function request(path, options = {}) {
     const url = API_BASE + path;
-    const response = await fetch(url, options);
-    if (!response.ok) {
-      let detail = 'Request failed';
-      try {
-        const err = await response.json();
-        detail = err.detail || err.message || detail;
-      } catch (_) {}
-      throw new Error(typeof detail === 'string' ? detail : JSON.stringify(detail));
+    const controller = new AbortController();
+    const timeoutMs = options.timeoutMs || 120000;
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const response = await fetch(url, { ...options, signal: controller.signal });
+      if (!response.ok) {
+        let detail = 'Request failed';
+        try {
+          const err = await response.json();
+          detail = err.detail || err.message || detail;
+        } catch (_) {}
+        throw new Error(typeof detail === 'string' ? detail : JSON.stringify(detail));
+      }
+      return response.json();
+    } catch (err) {
+      if (err.name === 'AbortError') {
+        throw new Error('PDF analysis timed out. Please try again with a clearer PDF.');
+      }
+      throw err;
+    } finally {
+      clearTimeout(timer);
     }
-    return response.json();
   }
 
   global.SmartHireAPI = {
@@ -34,16 +46,8 @@
     analyzeResume: async (file) => {
       const form = new FormData();
       form.append('file', file);
-      return request('/api/analyze-resume', { method: 'POST', body: form });
+      return request('/api/analyze-resume', { method: 'POST', body: form, timeoutMs: 180000 });
     },
-
-    analyzeText: (text) =>
-      request('/api/analyze-text', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, filename: 'pasted-resume.txt' }),
-      }),
-
     getJobs: (filters = {}, userSkills = []) => {
       const params = new URLSearchParams();
       if (filters.role && filters.role !== 'All Roles') params.set('role', filters.role);
