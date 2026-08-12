@@ -1,26 +1,45 @@
 import io
 import re
-from pypdf import PdfReader
 from docx import Document
 
 
 def _clean_chunk(text: str | None) -> str:
     if not text:
         return ""
-    # Fix common PDF ligatures / broken spacing
-    text = text.replace("\x00", " ")
-    text = text.replace("\xa0", " ")
+    text = text.replace("\x00", " ").replace("\xa0", " ")
     text = text.replace("\ufb01", "fi").replace("\ufb02", "fl")
     return text
 
 
 def extract_text_from_pdf(content: bytes) -> str:
-    """Extract text from PDF using pypdf, then pdfminer as fallback."""
-    parts: list[str] = []
+    """Extract text from PDF: PyMuPDF first, then pypdf, then pdfminer."""
+    candidates: list[str] = []
 
-    # Strategy 1: pypdf (fast)
+    # Strategy 1: PyMuPDF (best for most resumes)
     try:
+        import fitz  # pymupdf
+
+        doc = fitz.open(stream=content, filetype="pdf")
+        parts = []
+        for page in doc:
+            # "text" is default; also try blocks for multi-column
+            t = page.get_text("text") or ""
+            if len(re.sub(r"\s+", "", t)) < 20:
+                t = page.get_text("blocks")
+                if isinstance(t, list):
+                    t = "\n".join(b[4] for b in t if len(b) > 4 and isinstance(b[4], str))
+            parts.append(_clean_chunk(t))
+        doc.close()
+        candidates.append("\n".join(parts))
+    except Exception:
+        pass
+
+    # Strategy 2: pypdf
+    try:
+        from pypdf import PdfReader
+
         reader = PdfReader(io.BytesIO(content))
+        parts = []
         for page in reader.pages:
             try:
                 text = page.extract_text() or ""
@@ -31,32 +50,28 @@ def extract_text_from_pdf(content: bytes) -> str:
                     text = page.extract_text(extraction_mode="layout") or ""
                 except Exception:
                     text = ""
-            text = _clean_chunk(text)
-            if text.strip():
-                parts.append(text)
-    except Exception:
-        parts = []
-
-    joined = "\n".join(parts).strip()
-    if len(re.sub(r"\s+", "", joined)) >= 40:
-        return joined
-
-    # Strategy 2: pdfminer (better for many resumes)
-    try:
-        from pdfminer.high_level import extract_text as pdfminer_extract
-
-        mined = pdfminer_extract(io.BytesIO(content)) or ""
-        mined = _clean_chunk(mined)
-        if len(re.sub(r"\s+", "", mined)) > len(re.sub(r"\s+", "", joined)):
-            return mined
+            parts.append(_clean_chunk(text))
+        candidates.append("\n".join(parts))
     except Exception:
         pass
 
-    return joined
+    # Strategy 3: pdfminer
+    try:
+        from pdfminer.high_level import extract_text as pdfminer_extract
+
+        mined = _clean_chunk(pdfminer_extract(io.BytesIO(content)) or "")
+        candidates.append(mined)
+    except Exception:
+        pass
+
+    def score(t: str) -> int:
+        return len(re.findall(r"[A-Za-z]{2,}", t or ""))
+
+    best = max(candidates, key=score) if candidates else ""
+    return best or ""
 
 
 def extract_text_from_docx(content: bytes) -> str:
-    """Extract paragraphs, tables, headers, and footers from DOCX."""
     doc = Document(io.BytesIO(content))
     parts: list[str] = []
 
@@ -71,10 +86,10 @@ def extract_text_from_docx(content: bytes) -> str:
                 parts.append(" | ".join(cells))
 
     for section in doc.sections:
-        for header in (section.header, section.footer):
-            if header is None:
+        for block in (section.header, section.footer):
+            if block is None:
                 continue
-            for p in header.paragraphs:
+            for p in block.paragraphs:
                 if p.text and p.text.strip():
                     parts.append(p.text)
 
@@ -104,21 +119,20 @@ def extract_text(filename: str, content: bytes) -> str:
         return extract_text_from_txt(content)
     if lower.endswith(".doc"):
         raise ValueError(
-            "Legacy .DOC files are not supported. Please save as PDF or DOCX and try again."
+            "Legacy .DOC files are not supported. Please save as PDF or DOCX, or paste your resume text below."
         )
 
-    # Guess by magic bytes
     if content[:4] == b"%PDF":
         return extract_text_from_pdf(content)
-    if content[:2] == b"PK":  # zip-based docx
+    if content[:2] == b"PK":
         return extract_text_from_docx(content)
 
-    raise ValueError("Unsupported file type. Upload PDF, DOCX, or TXT.")
+    # Treat unknown as plain text
+    return extract_text_from_txt(content)
 
 
 def normalize_text(text: str) -> str:
     text = _clean_chunk(text)
-    # Join hyphenated line breaks common in PDFs: "develop-\nment" → "development"
     text = re.sub(r"(\w)-\n(\w)", r"\1\2", text)
     text = text.replace("\n", " ")
     text = re.sub(r"\s+", " ", text)
@@ -126,7 +140,6 @@ def normalize_text(text: str) -> str:
 
 
 def extraction_quality(text: str) -> dict:
-    """Return metrics used for validation / clearer errors."""
     chars = len(text)
     letters = len(re.findall(r"[A-Za-z]", text))
     words = len(re.findall(r"[A-Za-z]{2,}", text))

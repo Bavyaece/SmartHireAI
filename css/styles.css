@@ -1948,3 +1948,46 @@ ul, ol {
   outline: none;
   border-color: var(--primary);
 }
+
+.paste-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 12px;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.paste-divider::before,
+.paste-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.resume-textarea {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 120px;
+}
+
+.resume-textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.resume-textarea::placeholder {
+  color: var(--text-muted);
+}

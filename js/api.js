@@ -37,6 +37,13 @@
       return request('/api/analyze-resume', { method: 'POST', body: form });
     },
 
+    analyzeText: (text) =>
+      request('/api/analyze-text', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, filename: 'pasted-resume.txt' }),
+      }),
+
     getJobs: (filters = {}, userSkills = []) => {
       const params = new URLSearchParams();
       if (filters.role && filters.role !== 'All Roles') params.set('role', filters.role);

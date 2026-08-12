@@ -260,10 +260,13 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
             </div>
             <h3>Drop your resume here</h3>
-            <p class="text-muted">Upload PDF or DOCX</p>
+            <p class="text-muted">Upload PDF, DOCX, or TXT</p>
             <input type="file" id="resumeInput" accept=".pdf,.doc,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" hidden>
             <button class="btn btn-primary" id="analyzeBtn">Analyze Resume</button>
-            <p class="text-muted" style="margin-top:12px;font-size:0.8rem;">Tip: Use a text PDF or DOCX (not a scanned photo).</p>
+            <div class="paste-divider"><span>or paste text</span></div>
+            <textarea id="resumeTextInput" class="resume-textarea" rows="6" placeholder="Paste your resume text here (works even if PDF is scanned)..."></textarea>
+            <button class="btn btn-outline" id="analyzeTextBtn" type="button">Analyze Pasted Text</button>
+            <p class="text-muted" style="margin-top:12px;font-size:0.8rem;">Scanned PDF? Paste the text, or upload DOCX/TXT instead.</p>
           </div>
 
           <div class="analysis-preview glass-card fade-in delay-1">

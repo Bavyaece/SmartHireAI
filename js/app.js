@@ -245,8 +245,34 @@
       document.querySelector('#dashboard')?.scrollIntoView({ behavior: 'smooth' });
     } catch (err) {
       showUploadFeedback(err.message || 'Analysis failed', 'error');
+      const paste = document.getElementById('resumeTextInput');
+      if (paste && /scanned|paste|could not read/i.test(err.message || '')) {
+        paste.focus();
+      }
     } finally {
       setLoading(analyzeBtn, false);
+    }
+  }
+
+  async function analyzePastedText(btn) {
+    const paste = document.getElementById('resumeTextInput');
+    const text = (paste?.value || '').trim();
+    if (!text) {
+      showUploadFeedback('Paste your resume text first, then click Analyze Pasted Text.', 'error');
+      paste?.focus();
+      return;
+    }
+    setLoading(btn, true, 'Analyzing...');
+    try {
+      const data = await SmartHireAPI.analyzeText(text);
+      saveProfile(data);
+      renderAnalysis(data);
+      showUploadFeedback('Analysis complete from pasted text', 'success');
+      document.querySelector('#dashboard')?.scrollIntoView({ behavior: 'smooth' });
+    } catch (err) {
+      showUploadFeedback(err.message || 'Analysis failed', 'error');
+    } finally {
+      setLoading(btn, false);
     }
   }
 
@@ -269,10 +295,15 @@
   const uploadZone = document.getElementById('uploadZone');
   const resumeInput = document.getElementById('resumeInput');
   const analyzeBtn = document.getElementById('analyzeBtn');
+  const analyzeTextBtn = document.getElementById('analyzeTextBtn');
+  const resumeTextInput = document.getElementById('resumeTextInput');
 
   if (uploadZone && resumeInput) {
     uploadZone.addEventListener('click', (e) => {
-      if (e.target === analyzeBtn) return;
+      const t = e.target;
+      if (t === analyzeBtn || t === analyzeTextBtn || t === resumeTextInput) return;
+      if (t.closest && (t.closest('#analyzeTextBtn') || t.closest('.resume-textarea') || t.closest('.paste-divider'))) return;
+      if (t.tagName === 'TEXTAREA' || t.tagName === 'BUTTON') return;
       resumeInput.click();
     });
 
@@ -284,6 +315,13 @@
         resumeInput.click();
       }
     });
+
+    analyzeTextBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      analyzePastedText(analyzeTextBtn);
+    });
+
+    resumeTextInput?.addEventListener('click', (e) => e.stopPropagation());
 
     uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
     uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
