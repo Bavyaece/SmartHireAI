@@ -90,8 +90,9 @@ async def analyze_resume(file: UploadFile = File(...), db: Session = Depends(get
         name = (file.filename or "").lower()
         if name.endswith(".pdf"):
             detail = (
-                "Could not read text from this PDF (likely scanned/image). "
-                "Paste your resume text in the box below, or upload a DOCX/TXT / text-based PDF."
+                "Could not read text from this PDF even with OCR. "
+                "Please paste your resume in the text box below (Ctrl+A in Word → Copy → Paste), "
+                "or upload a DOCX/TXT file."
             )
         else:
             detail = (
