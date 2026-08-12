@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SmartHire AI — Your Career, Smarter with AI. Analyze resumes, discover jobs, identify skill gaps, and get personalized career guidance.">
+  <title>SmartHire AI — Your Career, Smarter with AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+</head>
+<body>
+  <!-- Background Effects -->
+  <div class="bg-effects" aria-hidden="true">
+    <div class="bg-gradient"></div>
+    <div class="bg-glow bg-glow-purple"></div>
+    <div class="bg-glow bg-glow-blue"></div>
+    <div class="bg-grid"></div>
+    <canvas id="particles" class="bg-particles"></canvas>
+  </div>
+
+  <!-- Navigation -->
+  <header class="navbar" id="navbar">
+    <div class="container navbar-inner">
+      <a href="#home" class="logo" aria-label="SmartHire AI Home">
+        <img src="assets/logo.svg" alt="" width="36" height="36">
+        <span>SmartHire <span class="logo-accent">AI</span></span>
+      </a>
+
+      <nav class="nav-links" id="navLinks" aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#resume-analyzer">Resume Analyzer</a>
+        <a href="#jobs">Jobs</a>
+        <a href="#skill-gap">Skill Gap</a>
+        <a href="#ai-mentor">AI Mentor</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="#login" class="btn btn-ghost btn-sm">Log In</a>
+        <a href="#resume-analyzer" class="btn btn-primary btn-sm">Get Started</a>
+      </div>
+
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+    <div class="mobile-menu" id="mobileMenu">
+      <nav aria-label="Mobile navigation">
+        <a href="#home">Home</a>
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#resume-analyzer">Resume Analyzer</a>
+        <a href="#jobs">Jobs</a>
+        <a href="#skill-gap">Skill Gap</a>
+        <a href="#ai-mentor">AI Mentor</a>
+        <div class="mobile-menu-actions">
+          <a href="#login" class="btn btn-ghost">Log In</a>
+          <a href="#resume-analyzer" class="btn btn-primary">Get Started</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero section" id="home">
+      <div class="container hero-grid">
+        <div class="hero-content fade-in">
+          <div class="badge">
+            <span class="badge-icon">✦</span>
+            AI-POWERED CAREER INTELLIGENCE
+          </div>
+          <h1>Your Career,<br><span class="gradient-text">Smarter with AI.</span></h1>
+          <p class="hero-sub">Analyze your resume, discover the right opportunities, identify your skill gaps, and build a smarter career path with AI.</p>
+          <div class="hero-cta">
+            <a href="#resume-analyzer" class="btn btn-primary btn-lg">Analyze My Resume</a>
+            <a href="#features" class="btn btn-outline btn-lg">Explore Features</a>
+          </div>
+          <p class="hero-support">Built for students, graduates and professionals.</p>
+        </div>
+
+        <div class="hero-visual fade-in delay-1">
+          <div class="dashboard-preview glass-card">
+            <div class="dashboard-header">
+              <div class="dashboard-dots">
+                <span></span><span></span><span></span>
+              </div>
+              <span class="dashboard-title">Career Intelligence</span>
+            </div>
+            <div class="dashboard-body">
+              <div class="score-ring">
+                <svg viewBox="0 0 120 120" class="score-svg">
+                  <circle cx="60" cy="60" r="52" class="score-bg"/>
+                  <circle cx="60" cy="60" r="52" class="score-fill" style="--score: 87"/>
+                </svg>
+                <div class="score-label">
+                  <span class="score-value">87</span>
+                  <span class="score-max">/100</span>
+                </div>
+                <span class="score-title">Resume Score</span>
+              </div>
+
+              <div class="dashboard-section">
+                <h4>Skills</h4>
+                <div class="skill-tags">
+                  <span class="skill-tag">Python</span>
+                  <span class="skill-tag">Machine Learning</span>
+                  <span class="skill-tag">SQL</span>
+                  <span class="skill-tag">React</span>
+                  <span class="skill-tag">Communication</span>
+                </div>
+              </div>
+
+              <div class="dashboard-row">
+                <div class="dashboard-section">
+                  <h4>Recommended Roles</h4>
+                  <ul class="role-list">
+                    <li><span class="role-dot"></span>AI Engineer</li>
+                    <li><span class="role-dot"></span>Data Analyst</li>
+                    <li><span class="role-dot"></span>Software Engineer</li>
+                  </ul>
+                </div>
+                <div class="dashboard-section">
+                  <h4>Skill Match</h4>
+                  <div class="match-bar">
+                    <div class="match-fill" style="width: 82%"></div>
+                  </div>
+                  <span class="match-value">82%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="hero-glow"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-header fade-in">
+          <h2>Everything you need to move your career forward.</h2>
+        </div>
+        <div class="features-grid">
+          <article class="feature-card glass-card fade-in">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <h3>Resume Intelligence</h3>
+            <p>Turn your resume into actionable career insights.</p>
+            <ul class="feature-list">
+              <li>Resume scoring</li>
+              <li>Skill extraction</li>
+              <li>ATS suggestions</li>
+              <li>Strength analysis</li>
+            </ul>
+          </article>
+
+          <article class="feature-card glass-card fade-in delay-1">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+            </div>
+            <h3>Smart Job Matching</h3>
+            <p>Discover job opportunities that match your skills and experience.</p>
+            <ul class="feature-list">
+              <li>Job matching</li>
+              <li>Match percentage</li>
+              <li>Skill comparison</li>
+              <li>Recommended roles</li>
+            </ul>
+          </article>
+
+          <article class="feature-card glass-card fade-in delay-2">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            </div>
+            <h3>Skill Gap Analysis</h3>
+            <p>Know exactly what skills you need to reach your dream role.</p>
+            <ul class="feature-list">
+              <li>Current skills</li>
+              <li>Required skills</li>
+              <li>Missing skills</li>
+              <li>Learning recommendations</li>
+            </ul>
+          </article>
+
+          <article class="feature-card glass-card fade-in delay-3">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <h3>AI Career Mentor</h3>
+            <p>Get personalized career guidance whenever you need it.</p>
+            <ul class="feature-list">
+              <li>Career questions</li>
+              <li>Interview preparation</li>
+              <li>Resume guidance</li>
+              <li>Learning advice</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section" id="how-it-works">
+      <div class="container">
+        <div class="section-header fade-in">
+          <h2>From resume to career growth in four simple steps.</h2>
+        </div>
+        <div class="timeline">
+          <div class="timeline-line" aria-hidden="true"></div>
+          <div class="timeline-step fade-in">
+            <div class="step-number">01</div>
+            <div class="step-content glass-card">
+              <h3>Upload</h3>
+              <p>Upload your resume securely.</p>
+            </div>
+          </div>
+          <div class="timeline-step fade-in delay-1">
+            <div class="step-number">02</div>
+            <div class="step-content glass-card">
+              <h3>Analyze</h3>
+              <p>SmartHire AI understands your skills and experience.</p>
+            </div>
+          </div>
+          <div class="timeline-step fade-in delay-2">
+            <div class="step-number">03</div>
+            <div class="step-content glass-card">
+              <h3>Match</h3>
+              <p>Discover relevant jobs and career opportunities.</p>
+            </div>
+          </div>
+          <div class="timeline-step fade-in delay-3">
+            <div class="step-number">04</div>
+            <div class="step-content glass-card">
+              <h3>Grow</h3>
+              <p>Follow your personalized skill and career roadmap.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Resume Analyzer -->
+    <section class="section" id="resume-analyzer">
+      <div class="container">
+        <div class="section-header fade-in">
+          <h2>Turn your resume into your career advantage.</h2>
+        </div>
+        <div class="analyzer-grid">
+          <div class="upload-card glass-card fade-in" id="uploadZone">
+            <div class="upload-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <h3>Drop your resume here</h3>
+            <p class="text-muted">Upload PDF or DOCX</p>
+            <input type="file" id="resumeInput" accept=".pdf,.doc,.docx" hidden>
+            <button class="btn btn-primary" id="analyzeBtn">Analyze Resume</button>
+          </div>
+
+          <div class="analysis-preview glass-card fade-in delay-1">
+            <div class="analysis-header">
+              <h3>Analysis Preview</h3>
+              <span class="analysis-badge">Sample</span>
+            </div>
+            <div class="analysis-score">
+              <div class="mini-score">
+                <span class="mini-score-value">87</span>
+                <span class="mini-score-label">/100</span>
+              </div>
+              <span>Resume Score</span>
+            </div>
+            <div class="analysis-block">
+              <h4>Technical Skills</h4>
+              <div class="skill-tags">
+                <span class="skill-tag">Python</span>
+                <span class="skill-tag">SQL</span>
+                <span class="skill-tag">Machine Learning</span>
+                <span class="skill-tag">React</span>
+              </div>
+            </div>
+            <div class="analysis-block">
+              <h4>Strengths</h4>
+              <div class="strength-tags">
+                <span class="strength-tag">Problem Solving</span>
+                <span class="strength-tag">Programming</span>
+                <span class="strength-tag">Project Experience</span>
+              </div>
+            </div>
+            <div class="analysis-block">
+              <h4>Recommended Roles</h4>
+              <ul class="role-list">
+                <li><span class="role-dot"></span>AI Engineer</li>
+                <li><span class="role-dot"></span>Software Developer</li>
+                <li><span class="role-dot"></span>Data Analyst</li>
+              </ul>
+            </div>
+            <div class="analysis-block">
+              <h4>ATS Optimization</h4>
+              <div class="ats-status">
+                <div class="ats-bar"><div class="ats-fill good" style="width: 85%"></div></div>
+                <span class="ats-label good">Good</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dashboard -->
+    <section class="section" id="dashboard">
+      <div class="container">
+        <div class="section-header fade-in">
+          <h2>One intelligent dashboard for your career.</h2>
+        </div>
+        <div class="career-dashboard glass-card fade-in">
+          <div class="stats-row">
+            <div class="stat-card">
+              <span class="stat-value">87%</span>
+              <span class="stat-label">Resume Score</span>
+              <div class="stat-bar"><div class="stat-fill" style="width: 87%"></div></div>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value">12</span>
+              <span class="stat-label">Skills Identified</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value">24</span>
+              <span class="stat-label">Job Matches</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value">5</span>
+              <span class="stat-label">Skill Gaps</span>
+            </div>
+          </div>
+
+          <div class="dashboard-panels">
+            <div class="panel">
+              <h4>Recommended Roles</h4>
+              <div class="role-cards">
+                <div class="role-card">
+                  <span class="role-name">AI Engineer</span>
+                  <div class="role-match"><div class="role-match-fill" style="width: 92%"></div></div>
+                </div>
+                <div class="role-card">
+                  <span class="role-name">Data Analyst</span>
+                  <div class="role-match"><div class="role-match-fill" style="width: 87%"></div></div>
+                </div>
+                <div class="role-card">
+                  <span class="role-name">Software Engineer</span>
+                  <div class="role-match"><div class="role-match-fill" style="width: 84%"></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="panel">
+              <h4>Recent Activity</h4>
+              <ul class="activity-list">
+                <li><span class="activity-dot"></span>Resume analyzed <time>2 min ago</time></li>
+                <li><span class="activity-dot"></span>Skill gap checked <time>15 min ago</time></li>
+                <li><span class="activity-dot"></span>Job matched <time>1 hr ago</time></li>
+              </ul>
+            </div>
+            <div class="panel panel-chart">
+              <h4>Skill Distribution</h4>
+              <div class="chart-bars">
+                <div class="chart-bar-item"><span>Technical</span><div class="chart-bar"><div style="width: 78%"></div></div></div>
+                <div class="chart-bar-item"><span>Soft Skills</span><div class="chart-bar"><div style="width: 65%"></div></div></div>
+                <div class="chart-bar-item"><span>Tools</span><div class="chart-bar"><div style="width: 82%"></div></div></div>
+                <div class="chart-bar-item"><span>Domain</span><div class="chart-bar"><div style="width: 55%"></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Jobs -->
+    <section class="section" id="jobs">
+      <div class="container">
+        <div class="section-header fade-in">
+          <h2>Find jobs that fit you.</h2>
+        </div>
+
+        <div class="job-filters glass-card fade-in">
+          <div class="filter-group">
+            <label for="filterRole">Role</label>
+            <select id="filterRole"><option>All Roles</option><option>AI Engineer</option><option>Data Analyst</option><option>Software Engineer</option></select>
+          </div>
+          <div class="filter-group">
+            <label for="filterLocation">Location</label>
+            <select id="filterLocation"><option>All Locations</option><option>Remote</option><option>Hybrid</option><option>On-site</option></select>
+          </div>
+          <div class="filter-group">
+            <label for="filterExperience">Experience</label>
+            <select id="filterExperience"><option>All Levels</option><option>Entry</option><option>Mid</option><option>Senior</option></select>
+          </div>
+          <div class="filter-group">
+            <label for="filterRemote">Remote</label>
+            <select id="filterRemote"><option>Any</option><option>Remote Only</option><option>Not Remote</option></select>
+          </div>
+          <div class="filter-group">
+            <label for="filterSkills">Skills</label>
+            <select id="filterSkills"><option>All Skills</option><option>Python</option><option>React</option><option>SQL</option></select>
+          </div>
+        </div>
+
+        <div class="jobs-grid">
+          <article class="job-card glass-card fade-in">
+            <div class="job-header">
+              <h3>AI Engineer</h3>
+              <span class="match-badge high">92% Match</span>
+            </div>
+            <p class="job-company text-muted">TechCorp · Remote</p>
+            <div class="skill-tags">
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">Machine Learning</span>
+              <span class="skill-tag">TensorFlow</span>
+            </div>
+            <div class="job-actions">
+              <button class="btn btn-primary btn-sm">View Job</button>
+              <button class="btn btn-outline btn-sm">Save Job</button>
+            </div>
+          </article>
+
+          <article class="job-card glass-card fade-in delay-1">
+            <div class="job-header">
+              <h3>Data Analyst</h3>
+              <span class="match-badge">87% Match</span>
+            </div>
+            <p class="job-company text-muted">DataFlow Inc · Hybrid</p>
+            <div class="skill-tags">
+              <span class="skill-tag">SQL</span>
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">Power BI</span>
+            </div>
+            <div class="job-actions">
+              <button class="btn btn-primary btn-sm">View Job</button>
+              <button class="btn btn-outline btn-sm">Save Job</button>
+            </div>
+          </article>
+
+          <article class="job-card glass-card fade-in delay-2">
+            <div class="job-header">
+              <h3>Software Engineer</h3>
+              <span class="match-badge">84% Match</span>
+            </div>
+            <p class="job-company text-muted">BuildStack · Remote</p>
+            <div class="skill-tags">
+              <span class="skill-tag">JavaScript</span>
+              <span class="skill-tag">React</span>
+              <span class="skill-tag">Git</span>
+            </div>
+            <div class="job-actions">
+              <button class="btn btn-primary btn-sm">View Job</button>
+              <button class="btn btn-outline btn-sm">Save Job</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skill Gap -->
+    <section class="section" id="skill-gap">
+      <div class="container">
+        <div class="section-header fade-in">
+          <h2>Know what stands between you and your dream role.</h2>
+        </div>
+        <div class="skill-gap-grid">
+          <div class="skill-gap-card glass-card fade-in">
+            <div class="target-role">
+              <span class="label">Target Role</span>
+              <h3>AI Engineer</h3>
+            </div>
+            <h4>Your Skills</h4>
+            <ul class="skill-checklist">
+              <li class="skill-have"><span class="check">✓</span> Python</li>
+              <li class="skill-have"><span class="check">✓</span> SQL</li>
+              <li class="skill-have"><span class="check">✓</span> Machine Learning</li>
+              <li class="skill-partial"><span class="check">⚠</span> Deep Learning</li>
+              <li class="skill-missing"><span class="check">✕</span> Docker</li>
+            </ul>
+            <div class="gap-progress">
+              <span>Role Readiness</span>
+              <div class="gap-bar"><div class="gap-fill" style="width: 72%"></div></div>
+              <span class="gap-percent">72%</span>
+            </div>
+          </div>
+
+          <div class="learning-path glass-card fade-in delay-1">
+            <h3>Recommended Learning Path</h3>
+            <ol class="learning-steps">
+              <li class="completed">
+                <span class="step-indicator">1</span>
+                <div><strong>Advanced Python</strong><div class="step-bar"><div style="width: 100%"></div></div></div>
+              </li>
+              <li class="completed">
+                <span class="step-indicator">2</span>
+                <div><strong>Machine Learning</strong><div class="step-bar"><div style="width: 100%"></div></div></div>
+              </li>
+              <li class="active">
+                <span class="step-indicator">3</span>
+                <div><strong>Deep Learning</strong><div class="step-bar"><div style="width: 45%"></div></div></div>
+              </li>
+              <li>
+                <span class="step-indicator">4</span>
+                <div><strong>FastAPI</strong><div class="step-bar"><div style="width: 0%"></div></div></div>
+              </li>
+              <li>
+                <span class="step-indicator">5</span>
+                <div><strong>Docker</strong><div class="step-bar"><div style="width: 0%"></div></div></div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Mentor -->
+    <section class="section" id="ai-mentor">
+      <div class="container">
+        <div class="section-header fade-in">
+          <h2>Your AI Career Mentor is always ready.</h2>
+        </div>
+        <div class="mentor-container fade-in">
+          <div class="chat-preview glass-card">
+            <div class="chat-header">
+              <div class="chat-avatar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a4 4 0 0 1 4 4v1h1a3 3 0 0 1 3 3v2a3 3 0 0 1-3 3h-1v1a4 4 0 0 1-8 0v-1H7a3 3 0 0 1-3-3v-2a3 3 0 0 1 3-3h1V6a4 4 0 0 1 4-4z"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg>
+              </div>
+              <div>
+                <strong>SmartHire AI Mentor</strong>
+                <span class="text-muted">Online · Ready to help</span>
+              </div>
+            </div>
+            <div class="chat-messages">
+              <div class="message user">
+                <p>What skills should I learn to become an AI Engineer?</p>
+              </div>
+              <div class="message ai">
+                <p>Based on your current profile, I recommend strengthening Python, Machine Learning, Deep Learning, FastAPI and Docker. You're already strong in Python and ML — focus next on Deep Learning frameworks and containerization with Docker to reach full role readiness.</p>
+              </div>
+            </div>
+            <div class="chat-input-area">
+              <input type="text" placeholder="Ask your career question..." aria-label="Chat message">
+              <button class="btn btn-primary btn-sm" aria-label="Send message">Send</button>
+            </div>
+          </div>
+          <a href="#ai-mentor" class="btn btn-primary btn-lg mentor-cta">Ask AI Mentor</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why SmartHire AI -->
+    <section class="section" id="why">
+      <div class="container">
+        <div class="section-header fade-in">
+          <h2>Why SmartHire AI?</h2>
+        </div>
+        <div class="why-grid fade-in">
+          <div class="why-item"><span class="why-check">✓</span> AI-powered insights</div>
+          <div class="why-item"><span class="why-check">✓</span> Personalized recommendations</div>
+          <div class="why-item"><span class="why-check">✓</span> Resume intelligence</div>
+          <div class="why-item"><span class="why-check">✓</span> Smart job matching</div>
+          <div class="why-item"><span class="why-check">✓</span> Skill gap analysis</div>
+          <div class="why-item"><span class="why-check">✓</span> Career guidance</div>
+          <div class="why-item"><span class="why-check">✓</span> Easy to use</div>
+          <div class="why-item"><span class="why-check">✓</span> Designed for modern job seekers</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trust / Statistics -->
+    <section class="section trust-section">
+      <div class="container">
+        <div class="trust-grid fade-in">
+          <div class="trust-card glass-card">
+            <div class="trust-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            </div>
+            <h3>AI-Powered Analysis</h3>
+            <p>Advanced intelligence that understands your unique career profile.</p>
+          </div>
+          <div class="trust-card glass-card">
+            <div class="trust-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <h3>Fast Results</h3>
+            <p>Get actionable insights in seconds, not hours.</p>
+          </div>
+          <div class="trust-card glass-card">
+            <div class="trust-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <h3>Personalized Insights</h3>
+            <p>Recommendations tailored to your skills and goals.</p>
+          </div>
+          <div class="trust-card glass-card">
+            <div class="trust-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <h3>Career-Focused Recommendations</h3>
+            <p>Every suggestion is designed to move your career forward.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section cta-section">
+      <div class="container">
+        <div class="cta-card glass-card fade-in">
+          <h2>Your next opportunity starts with understanding your potential.</h2>
+          <p>Let SmartHire AI help you turn your skills into your next career opportunity.</p>
+          <a href="#resume-analyzer" class="btn btn-primary btn-lg">Get Started with SmartHire AI</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a href="#home" class="logo">
+          <img src="assets/logo.svg" alt="" width="32" height="32">
+          <span>SmartHire <span class="logo-accent">AI</span></span>
+        </a>
+        <p class="footer-tagline">Your Career, Smarter with AI.</p>
+        <div class="social-links">
+          <a href="#" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+          <a href="#" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <h4>Navigation</h4>
+        <a href="#home">Home</a>
+        <a href="#features">Features</a>
+        <a href="#resume-analyzer">Resume Analyzer</a>
+        <a href="#jobs">Jobs</a>
+        <a href="#skill-gap">Skill Gap</a>
+        <a href="#ai-mentor">AI Mentor</a>
+      </div>
+
+      <div class="footer-links">
+        <h4>Support</h4>
+        <a href="#contact">Contact</a>
+        <a href="#privacy">Privacy Policy</a>
+        <a href="#terms">Terms</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>&copy; 2026 SmartHire AI. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
