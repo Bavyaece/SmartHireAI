@@ -23,7 +23,7 @@ def _analyze_text_content(text: str, filename: str, db: Session) -> ResumeAnalys
     text = normalize_text(text)
     quality = extraction_quality(text)
 
-    if quality["letters"] < 30 or quality["words"] < 8:
+    if quality["letters"] < 12 or quality["words"] < 4:
         raise HTTPException(
             status_code=422,
             detail=(
@@ -86,7 +86,7 @@ async def analyze_resume(file: UploadFile = File(...), db: Session = Depends(get
     text = normalize_text(raw_text)
     quality = extraction_quality(text)
 
-    if quality["letters"] < 25 or quality["words"] < 6:
+    if quality["letters"] < 12 or quality["words"] < 4:
         raise HTTPException(
             status_code=422,
             detail=(

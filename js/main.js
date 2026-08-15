@@ -61,9 +61,8 @@
       const targetId = this.getAttribute('href');
       if (targetId === '#login' || targetId === '#signup') {
         e.preventDefault();
-        if (window.SmartHireAuth) {
-          window.SmartHireAuth.openAuthModal(targetId === '#signup' ? 'signup' : 'login');
-        }
+        const target = document.querySelector('#resume-analyzer');
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
         return;
       }
       if (targetId === '#contact' || targetId === '#privacy' || targetId === '#terms') {

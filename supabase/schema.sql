@@ -13,6 +13,10 @@ create table if not exists public.profiles (
 
 alter table public.profiles enable row level security;
 
+drop policy if exists "Users can view own profile" on public.profiles;
+drop policy if exists "Users can update own profile" on public.profiles;
+drop policy if exists "Users can insert own profile" on public.profiles;
+
 create policy "Users can view own profile"
   on public.profiles for select
   using (auth.uid() = id);
@@ -63,6 +67,10 @@ create table if not exists public.resume_analyses (
 
 alter table public.resume_analyses enable row level security;
 
+drop policy if exists "Users can view own analyses" on public.resume_analyses;
+drop policy if exists "Users can insert own analyses" on public.resume_analyses;
+drop policy if exists "Users can delete own analyses" on public.resume_analyses;
+
 create policy "Users can view own analyses"
   on public.resume_analyses for select
   using (auth.uid() = user_id);
@@ -89,6 +97,10 @@ create table if not exists public.saved_jobs (
 
 alter table public.saved_jobs enable row level security;
 
+drop policy if exists "Users can view own saved jobs" on public.saved_jobs;
+drop policy if exists "Users can insert own saved jobs" on public.saved_jobs;
+drop policy if exists "Users can delete own saved jobs" on public.saved_jobs;
+
 create policy "Users can view own saved jobs"
   on public.saved_jobs for select
   using (auth.uid() = user_id);
@@ -111,6 +123,9 @@ create table if not exists public.mentor_messages (
 );
 
 alter table public.mentor_messages enable row level security;
+
+drop policy if exists "Users can view own messages" on public.mentor_messages;
+drop policy if exists "Users can insert own messages" on public.mentor_messages;
 
 create policy "Users can view own messages"
   on public.mentor_messages for select

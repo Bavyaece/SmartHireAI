@@ -12,10 +12,14 @@ from app.routers import resume, jobs, skill_gap, mentor
 settings = get_settings()
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
+def ensure_db_ready() -> None:
     Base.metadata.create_all(bind=engine)
     seed_jobs()
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    ensure_db_ready()
     # Skip OCR warmup on Vercel (cold start / size); warm locally only
     if not settings.vercel:
         try:
@@ -24,6 +28,9 @@ async def lifespan(app: FastAPI):
         except Exception:
             pass
     yield
+
+
+ensure_db_ready()
 
 
 app = FastAPI(title=settings.app_name, version="1.0.0", lifespan=lifespan)

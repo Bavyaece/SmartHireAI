@@ -9,7 +9,13 @@
   let currentUser = null;
 
   function isConfigured() {
-    return Boolean(cfg.url && cfg.anonKey && cfg.url.includes('supabase.co'));
+    const urlOk = Boolean(cfg.url && cfg.url.includes('supabase.co'));
+    const keyOk = Boolean(
+      cfg.anonKey &&
+      cfg.anonKey.length > 20 &&
+      !/YOUR_|PASTE|placeholder|example/i.test(cfg.anonKey)
+    );
+    return urlOk && keyOk;
   }
 
   function getClient() {
@@ -51,11 +57,11 @@
     if (user) {
       const name = user.user_metadata?.full_name || user.email?.split('@')[0] || 'Account';
       if (loginBtn) {
-        loginBtn.textContent = 'Log Out';
-        loginBtn.href = '#logout';
-        loginBtn.onclick = async (e) => {
+        loginBtn.textContent = 'Dashboard';
+        loginBtn.href = '#resume-analyzer';
+        loginBtn.onclick = (e) => {
           e.preventDefault();
-          await signOut();
+          document.querySelector('#resume-analyzer')?.scrollIntoView({ behavior: 'smooth' });
         };
       }
       if (getStartedBtn) {
@@ -69,29 +75,28 @@
       if (mobileActions) {
         const links = mobileActions.querySelectorAll('a');
         if (links[0]) {
-          links[0].textContent = 'Log Out';
-          links[0].onclick = async (e) => {
+          links[0].textContent = 'Dashboard';
+          links[0].onclick = (e) => {
             e.preventDefault();
-            await signOut();
+            document.querySelector('#resume-analyzer')?.scrollIntoView({ behavior: 'smooth' });
           };
         }
-        if (links[1]) links[1].textContent = 'Analyze Resume';
       }
     } else {
       if (loginBtn) {
-        loginBtn.textContent = 'Log In';
-        loginBtn.href = '#login';
+        loginBtn.textContent = 'Get Started';
+        loginBtn.href = '#resume-analyzer';
         loginBtn.onclick = (e) => {
           e.preventDefault();
-          openAuthModal('login');
+          document.querySelector('#resume-analyzer')?.scrollIntoView({ behavior: 'smooth' });
         };
       }
       if (getStartedBtn) {
         getStartedBtn.textContent = 'Get Started';
-        getStartedBtn.href = '#signup';
+        getStartedBtn.href = '#resume-analyzer';
         getStartedBtn.onclick = (e) => {
           e.preventDefault();
-          openAuthModal('signup');
+          document.querySelector('#resume-analyzer')?.scrollIntoView({ behavior: 'smooth' });
         };
       }
       if (badge) badge.style.display = 'none';
@@ -102,20 +107,8 @@
     const modal = document.getElementById('authModal');
     if (!modal) return;
 
-    if (!isConfigured()) {
-      alert(
-        'Supabase is not configured yet.\n\n' +
-          '1. Create a project at https://supabase.com/dashboard\n' +
-          '2. Copy Project URL + anon key\n' +
-          '3. Paste them into js/supabase-config.js\n' +
-          '4. Run supabase/schema.sql in the SQL Editor'
-      );
-      return;
-    }
-
-    modal.classList.add('open');
-    modal.setAttribute('aria-hidden', 'false');
-    setAuthMode(mode || 'login');
+    // Public demo mode: auth is intentionally disabled.
+    return;
   }
 
   function closeAuthModal() {
@@ -133,7 +126,12 @@
     const switchBtn = document.getElementById('authSwitch');
     const nameField = document.getElementById('authNameField');
     const form = document.getElementById('authForm');
+    const googleBtn = document.getElementById('authGoogle');
     if (form) form.dataset.mode = mode;
+    if (googleBtn) {
+      googleBtn.disabled = !isConfigured();
+      googleBtn.style.opacity = isConfigured() ? '1' : '0.5';
+    }
 
     if (mode === 'signup') {
       if (title) title.textContent = 'Create your account';

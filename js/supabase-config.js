@@ -1,11 +1,9 @@
 /**
  * Supabase config for SmartHire AI
  *
- * 1. Create a project at https://supabase.com/dashboard
- * 2. Project Settings → API → copy Project URL and anon public key
- * 3. Paste them below (or set via window before this script loads)
+ * Real project values from the Supabase dashboard.
  */
 window.SMART_HIRE_SUPABASE = window.SMART_HIRE_SUPABASE || {
-  url: '',   // e.g. https://xxxxxxxx.supabase.co
-  anonKey: '' // e.g. eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+  url: 'https://fmiyadwxootnsbshvgom.supabase.co',
+  anonKey: 'sb_publishable_NEotr4NKrKlnOsJt49zwfw_3MalkTRd'
 };
